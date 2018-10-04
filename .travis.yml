@@ -1,0 +1,31 @@
+env:
+  global:
+  - secure: Qq+YQgFZOg4GYJPFBNoVjeZrKRc+9PA5Kt5Hfyn0bwzxfkxd7ijX+n4d5INLrCnfi0xXZ5CQpWqiEDjwyvQ0RyRDXQGxdgO6/xrw4YqIe4Gx/xcbhgaTKnHIiogolZGbZg5lqfZ6VdnjYcGS1ExskWsd5jmoGXK6OaGwxcHWB57oograQcoFhhdT3DAbbF5W4H+9dcb91fk/EDJmMNh4en9msKBn9pMITXaSQS+U/ZxL5+JEG51EdcVzC8Xus30U6XONAUsSa5xN115y1R6B9bqe7ntX7fVStW0xrdVttSQt6TUlpU8ZhoEyQDxCVXRWnqI1+1pDQBcTGMesnKwvPvDEQcwnt876vw7AwWbY4ZGfYMJ88B6w8U7e1JfkgPd9xzSuxNK0zbvup++P9SBsNJ/0yqoYEB2HcQVRaMtADfZl+z57iNnGwvJlNkDHB4wztEewiRJtD0XCl8Vkt7wcUPg5YQGnSVBbc2yvk8JE28aN1iNYfKFOfwzne9+X7G5deP5W5JYDZe5RseZB8m0mJCKYigCtcnZZg/Fr37gi/wCv27YjoFFAzh+AFMABY5FKCO8VAt8t6IqyDxzu/8x0qRqFpiKeMTNVxyhC9LIWmAuHIuxTtgxCukum0+D6SrrXXeUCaZVisAT8FPWmRWjNTc5RtoEnqK5Hq9dd/jCe56Y=
+  - secure: Cpq8Hy7q7tl+2eEw71lxyezRM+a1f6qT9xGg/JEMSPGLrgBtZIQHsukXDIFmSzAGlvz/5JCNuNG9V0sVkVCETvCIFY/xEppIMW3gqAENYMCLkgo/KnoPdcDriPSAJrl01xDevFl8kAFcufZNi3M6VLx1T/8Qofcf+XYhriJ955JLUqEEGZoYGqKpbXyacyC1muKxdZEnnhUbM2/BCIw6H/Lgjq34onlFT+QEcB9Tfmv50XxwN3HPhSCZ62tnQNc/o9QkUWrvxkpWb/pKIwA9Tl5IF/VuXIbZsOmpsz0Lg05nbL0Lk0Uv2uKK2TfaqqWjx/UINmbSoxhfEZLIYgLgDZVBz02qCdENoEIBRXCZt+FGTm3tCMvBBMzTczz9okZ/BmHETkLq9q1QNCb6pDO5ol4WonShFLAgadjg4Khv797nAieL/fQacJFwXZNTD050dRZ7cw1UZUFo53PMpqlNgnKud27aQyCNSn2rRhYlQ/TpJ6rCP/mlKAV3MJbu4/I0vFs8dPXNrcYArS3mT2w1xnyqHxzdUM6AdnjIMVLltzeInTS1VcNdGc0VovsRdxN+h3p4GV2PCMI3GRtz3urIfDGBr0qPa82TMrZNK4PcwmKLj2H+FIEMAQFnErW68C2m3pXwWV55+veX0x51HBu6lAQyqUJhN7pWIjDO+9vJRGA=
+  - ORG=p1hub
+  - IMGDEV=p1-dev.php-fpm
+  - IMGPROD=p1.php-fpm
+
+sudo: true
+dist: trusty
+
+jobs:
+  include:
+    - stage: build DEV php-fpm image
+      script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -t $IMGDEV -f Dockerfiles/dev/Dockerfile-7.2 .
+      - docker images
+      - docker tag  $ORG/$IMGDEV:latest
+      - docker push $ORG/$IMGDEV
+    - stage: build PROD php-fpm image
+      script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -t $IMGPROD -f Dockerfiles/prod/Dockerfile-7.2 .
+      - docker images
+      - docker tag  $ORG/$IMGPROD:latest
+      - docker push $ORG/$IMGPROD
+    - stage: test
+      script: docker run --rm $ORG/$IMGDEV:latest php -v
+    - script: docker run --rm $ORG/$IMGPROD:latest php -v
+    

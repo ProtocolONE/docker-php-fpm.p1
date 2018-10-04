@@ -1,0 +1,53 @@
+FROM php:7.2-fpm
+MAINTAINER vstaf <vladimir.stafievsky@protocol.one>
+
+###
+### Labels
+###
+LABEL \
+    name="P1 PHP-FPM 7.2 Dev Image"  \
+    image="p1hub/p1-dev.php-fpm" \
+
+###
+### Install
+###
+
+RUN set -x \
+    && apt-get update \
+    && apt-get install --no-install-recommends --no-install-suggests -y procps zlib1g-dev libicu-dev libc-client-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN set -x \
+        && pecl install mongodb && docker-php-ext-enable mongodb \
+        && docker-php-ext-install opcache \
+        && docker-php-ext-install zip \
+        && docker-php-ext-configure intl \
+        && pecl install redis && docker-php-ext-enable redis \
+        && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ && docker-php-ext-install gd \
+        && apt-get autoremove -y --purge \
+        && apt-get clean \
+        && rm -Rf /tmp/*
+
+###
+### Verify
+###
+
+RUN set -x \
+    && php -v | grep -oE 'PHP\s[.0-9]+' | grep -oE '[.0-9]+' | grep '^7.2' \
+    && /usr/local/sbin/php-fpm --test \
+    && PHP_ERROR="$( php -v 2>&1 1>/dev/null )" \
+    && if [ -n "${PHP_ERROR}" ]; then echo "${PHP_ERROR}"; false; fi
+
+###
+### Copy custom *.ini files
+###
+
+COPY data/php.ini /usr/local/etc/php/conf.d/php.ini
+
+###
+### Where to start inside the container
+###
+
+WORKDIR /app
+
+CMD ["php-fpm"]

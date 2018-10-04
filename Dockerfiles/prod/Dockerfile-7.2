@@ -42,7 +42,7 @@ RUN set -x \
 ### Copy custom *.ini files
 ###
 
-COPY data/php.ini /usr/local/etc/php/conf.d/php.ini
+COPY ./Dockerfiles/prod/data/php.ini /usr/local/etc/php/conf.d/php.ini
 
 ###
 ### Where to start inside the container

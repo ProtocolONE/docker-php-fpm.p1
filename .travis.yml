@@ -8,6 +8,10 @@ env:
   
 sudo: true
 language: python
+
+before_install:
+  - './.travis/main.sh'
+
 services:
 - docker
 jobs:
@@ -15,14 +19,14 @@ jobs:
   - stage: build DEV php-fpm image
     script:
     - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
-    - docker build -t $IMGDEV -f Dockerfiles/dev/Dockerfile-7.2 .
+    - docker build -t $IMGDEV -f ./Dockerfiles/dev/Dockerfile-7.2 .
     - docker images
     - docker tag  $ORG/$IMGDEV:latest
     - docker push $ORG/$IMGDEV
   - stage: build PROD php-fpm image
     script:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    - docker build -t $IMGPROD -f Dockerfiles/prod/Dockerfile-7.2 .
+    - docker build -t $IMGPROD -f ./Dockerfiles/prod/Dockerfile-7.2 .
     - docker images
     - docker tag  $ORG/$IMGPROD:latest
     - docker push $ORG/$IMGPROD

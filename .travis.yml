@@ -7,7 +7,9 @@ env:
   - IMGPROD=p1.php-fpm
 
 sudo: true
-dist: trusty
+language: python
+services:
+  - docker
 
 jobs:
   include:

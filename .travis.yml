@@ -29,3 +29,7 @@ jobs:
   - stage: test
     script: docker run --rm $ORG/$IMGDEV:latest php -v
   - script: docker run --rm $ORG/$IMGPROD:latest php -v
+
+# don't notify me when things fail
+notifications:
+  email: false

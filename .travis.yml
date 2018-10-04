@@ -9,9 +9,6 @@ env:
 sudo: true
 language: python
 
-before_install:
-  - './.travis/main.sh'
-
 services:
 - docker
 jobs:

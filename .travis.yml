@@ -18,14 +18,12 @@ jobs:
     - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
     - docker build -t $ORG/$IMGDEV -f ./Dockerfiles/dev/Dockerfile-7.2 .
     - docker images
-    - docker tag $ORG/$IMGDEV:latest
     - docker push $ORG/$IMGDEV
   - stage: build PROD php-fpm image
     script:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker build -t $ORG/$IMGPROD -f ./Dockerfiles/prod/Dockerfile-7.2 .
     - docker images
-    - docker tag $ORG/$IMGPROD:latest
     - docker push $ORG/$IMGPROD
   - stage: test
     script: docker run --rm $ORG/$IMGDEV:latest php -v

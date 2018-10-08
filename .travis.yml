@@ -1,4 +1,3 @@
-#Travis build file
 env:
   global:
   - secure: FRGZxVRZYbd+gJV80pwAnKHfZPYm3bH4yzC7nj3Jd+4AC+9d2yJJiHBJ8gnQYVwbZDswzecrJmk30mo+gHNyisglzrOfAfrLnWIrY+7nNBW7RXYAGLpuYHM3DBdHLWhdOXchJVpBUaFQBC6ko1UlyqYtPxFU5XiNggBOhIFRaLaplylPHreTmLF3hzIVOq58F1+1ZTeeebynEGtZbLm5yx/T/krxaQKvxl82TqaTadMoXXvnyfisyTTeyiun69H8GS7yYT1voNzC/7Y2Q59CS/NaP+VVdNI68bqM1n9U+7fei4h1FmKAtFw0PZgog1PsSWHGpvw5073CoB/9Y/I4pUrMQvhFJVfncEM+98/O7PVlwwCFlOVHCHIt4WldjPx7FzT/lcbOiyLKBHRB90nW1kdo2ehbHZFRivU3zqQockvLJ5QJbT3V6aLuzScokZ+Mc+5kZ/iGvFV8VpCwqLh++og+OoGzRjFbcBGYuqFjMQZLnOzhu3MwVqOVJrlrfU+iX7NuGs3CV3ad5Hgrx+18FlS1U/15poB5fc8hDbvNXXzrn1Y88HNtGBgFy3x4MtCgVgr/6UWJd+bhGwPdMMIU/259P6byNdtbL/7w5Nrumv18qgpkudvYIoe945QDXGxrttY3l2mPZDVKffy1uuqkm3L++0JH5KS5zrDDzdwf2Ek=
@@ -6,13 +5,10 @@ env:
   - ORG=p1hub
   - IMGDEV=p1-dev.php-fpm
   - IMGPROD=p1.php-fpm
-  
 sudo: true
 language: python
-
 services:
 - docker
-
 if: tag IS present
 jobs:
   include:
@@ -31,7 +27,7 @@ jobs:
   - stage: test
     script: docker run --rm $ORG/$IMGDEV:latest php -v
   - script: docker run --rm $ORG/$IMGPROD:latest php -v
-
-# don't notify me when things fail
 notifications:
   email: false
+  slack:
+    secure: TbyxFngEJFGvzeDupY+XglWnyt6HQXo2tk2FI1h6zvE8bfzdGHnpHJv/Y2YeAPe2aIlqCRIrkAoiWLOGxrVG+rC4Vd8W87byLcAhSqIUDx4NZs72yJ3c0WR/JQ+XLXUWj/3bW2ODAG5qfJxHzI8XH4AqBfKa+WkFflN7M5Bry6x5goDGVfHrJe9iOxffGj7sZRFH3UBla5qs0drg6QUXLjTazfeKse1bL3dkvye8uUTLnuQLRWOtz84pePSECpzHvNK7YSRWhzgvZrqV89vN8zDwxXyZ0EB/90DaMWw6UoXhdfjXCOWXSEkCUui3PulMcFI63VjbikC/BAZFQAsW7DOY+RYyQJwgMYw/WQ0e//amw9Sv5dONDs747+2uTdz9E6id6RiX9UUGiw4KIP1RRz4J/h4qrMFpZ43btfjKK/3drOfLFpgEO4yRT0R6yuGrMFT0G7bHBD8omGbWcr2yEZwLyShDDyXXWQUXa62o3TikMUPDfcQTZafJJeV7VhJbB6lVO2bOZzn6FNEjDNtq6bvgPs8tbndJfBkiCI0Zvr88okGJqPvhw2jRnUzRlZZ4+astRJyODFo+Stky3kRtT2dxfCaX2jP2NMRqFtNIsIn3PdFhp9vXbR4GR/+KH0TIXUt/khUmI+IvAWFaWYd6c7SROlmtBpeovhZDK0u0+bA=

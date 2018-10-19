@@ -9,7 +9,7 @@ sudo: true
 language: python
 services:
 - docker
-if: tag IS present
+#if: tag IS present
 jobs:
   include:
   - stage: build DEV php-fpm image
